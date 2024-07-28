@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Municipal Asset Reporting</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #e0f7fa;
+      color: #333;
+    }
+
+    header {
+      background-color: #004d40;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 36px;
+    }
+
+    main {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    section {
+      flex: 1;
+      margin: 20px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background-color: #ffffff;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-top: 0;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #00796b;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #004d40;
+    }
+
+    #issue-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #issue-list li {
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    #issue-list li:last-child {
+      border-bottom: none;
+    }
+
+    #resolution-message {
+      margin-top: 20px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Municipal Asset Reporting</h1>
+  </header>
+  <main>
+    <section id="report-issue">
+      <h2>Report an Issue</h2>
+      <form>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+        <label for="mobile-number">Mobile Number:</label>
+        <input type="tel" id="mobile-number" name="mobile-number">
+        <label for="issue-type">Issue Type:</label>
+        <select id="issue-type" name="issue-type">
+          <option value="streetlight">Broken Streetlight</option>
+          <option value="pothole">Pothole</option>
+          <option value="other">Other</option>
+        </select>
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea>
+        <label for="aadhar-number">Aadhar Number:</label>
+        <input type="number" id="aadhar-number" name="aadhar-number">
+        <label for="upload-file">Upload a Picture/Video:</label>
+        <input type="file" id="upload-file" name="upload-file">
+        <button id="submit-issue">Submit Issue</button>
+      </form>
+    </section>
+    <section id="issue-status">
+      <h2>Issue Status</h2>
+      <ul id="issue-list">
+        <!-- issues will be displayed here -->
+      </ul>
+      <p id="resolution-message"></p>
+    </section>
+  </main>
+
+  <script>
+    let issues = [];
+
+    const submitButton = document.getElementById('submit-issue');
+    const issueList = document.getElementById('issue-list');
+    const resolutionMessage = document.getElementById('resolution-message');
+
+    submitButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const mobileNumber = document.getElementById('mobile-number').value;
+      const issueType = document.getElementById('issue-type').value;
+      const location = document.getElementById('location').value;
+      const description = document.getElementById('description').value;
+      const aadharNumber = document.getElementById('aadhar-number').value;
+      const uploadFile = document.getElementById('upload-file').files[0];
+
+      const newIssue = {
+        name: name,
+        mobileNumber: mobileNumber,
+        type: issueType,
+        location: location,
+        description: description,
+        aadharNumber: aadharNumber,
+        uploadFile: uploadFile,
+        status: 'reported'
+      };
+
+      issues.push(newIssue);
+      displayIssues();
+      resolutionMessage.textContent = 'Within 24hrs, your complaint shall be resolved by Ramesh Mishra (9996257577)';
+    });
+
+    function displayIssues() {
+      issueList.innerHTML = '';
+      issues.forEach((issue) => {
+        const issueHTML = `
+          <li>
+            <h3>${issue.name} - ${issue.type} at ${issue.location}</h3>
+            <p>Mobile Number: ${issue.mobileNumber}</p>
+            <p>Description: ${issue.description}</p>
+            <p>Aadhar Number: ${issue.aadharNumber}</p>
+            <p>Upload File: ${issue.uploadFile.name}</p>
+            <p>Status: ${issue.status}</p>
+          </li>
+        `;
+        issueList.innerHTML += issueHTML;
+      });
+    }
+  </script>
+</body>
+</html>
