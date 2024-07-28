@@ -8,13 +8,13 @@
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
-      background-color: #e0f7fa;
-      color: #333;
+      background-color: #15375a; /* Background color for the page */
+      color: black; /* White text color for contrast */
     }
 
     header {
-      background-color: #004d40;
-      color: #fff;
+      background-color: #003366; /* Updated background color to blue */
+      color: white;
       padding: 20px;
       text-align: center;
       border-radius: 10px;
@@ -24,12 +24,17 @@
     header h1 {
       margin: 0;
       font-size: 36px;
+      font-weight: bold; /* Making the heading bold */
     }
 
     main {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
+      background-color: #ffffff; /* White background for main content */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
     section {
@@ -39,12 +44,13 @@
       border: 1px solid #ddd;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      background-color: #ffffff;
+      background-color: #ffffff; /* Background color for sections */
     }
 
     h2 {
       font-size: 28px;
       margin-top: 0;
+      font-weight: bold; /* Making the subheadings bold */
     }
 
     form {
@@ -55,6 +61,7 @@
     label {
       margin-bottom: 10px;
       font-weight: bold;
+      color: #003366; /* Color for labels to match the blue background */
     }
 
     input, select, textarea {
@@ -62,10 +69,12 @@
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
+      background-color: #f9f9f9; /* Light background for form elements */
+      color: #333;
     }
 
     button {
-      background-color: #00796b;
+      background-color: #003366; /* Updated button background color to blue */
       color: #fff;
       padding: 10px 20px;
       border: none;
@@ -75,7 +84,7 @@
     }
 
     button:hover {
-      background-color: #004d40;
+      background-color: #002244; /* Darker blue for hover effect */
     }
 
     #issue-list {
@@ -87,6 +96,7 @@
     #issue-list li {
       padding: 15px;
       border-bottom: 1px solid #ddd;
+      color: #003366; /* Text color for issue list items */
     }
 
     #issue-list li:last-child {
@@ -96,6 +106,20 @@
     #resolution-message {
       margin-top: 20px;
       font-style: italic;
+      color: black; /* Text color for the resolution message */
+    }
+
+    .credit-score {
+      margin-top: 20px;
+    }
+
+    .review-bar {
+      margin-top: 10px;
+    }
+
+    .review-bar label {
+      margin-right: 10px;
+      color: #003366; /* Color for review bar labels */
     }
   </style>
 </head>
@@ -135,15 +159,37 @@
       </ul>
       <p id="resolution-message"></p>
     </section>
+    <section id="credit-score-section">
+      <h2>Credit Score</h2>
+      <div id="credit-score" class="credit-score">
+        <p>Current Credit Score: <span id="current-credit-score">230</span></p>
+        <div class="review-bar">
+          <label for="review-select">Add Points:</label>
+          <select id="review-select">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+          <button id="update-score">Update Score</button>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script>
     let issues = [];
+    let creditScore = 230;
 
     const submitButton = document.getElementById('submit-issue');
     const issueList = document.getElementById('issue-list');
     const resolutionMessage = document.getElementById('resolution-message');
-
+    const reviewSelect = document.getElementById('review-select');
+    const updateScoreButton = document.getElementById('update-score');
+    const currentCreditScore = document.getElementById('current-credit-score');
+    
     submitButton.addEventListener('click', (e) => {
       e.preventDefault();
       const name = document.getElementById('name').value;
@@ -153,39 +199,28 @@
       const description = document.getElementById('description').value;
       const aadharNumber = document.getElementById('aadhar-number').value;
       const uploadFile = document.getElementById('upload-file').files[0];
+      
+      // Process the issue submission logic
+      issues.push({ name, mobileNumber, issueType, location, description, aadharNumber, uploadFile });
+      
+      // Update issue list
+      const listItem = document.createElement('li');
+listItem.textContent = `${name} reported ${issueType} at ${location}`;
+issueList.appendChild(listItem);
 
-      const newIssue = {
-        name: name,
-        mobileNumber: mobileNumber,
-        type: issueType,
-        location: location,
-        description: description,
-        aadharNumber: aadharNumber,
-        uploadFile: uploadFile,
-        status: 'reported'
-      };
+// Show resolution message
+// (Add your code here to show a resolution message if necessary)
 
-      issues.push(newIssue);
-      displayIssues();
-      resolutionMessage.textContent = 'Within 24hrs, your complaint shall be resolved by Ramesh Mishra (9996257577)';
+      
+      // Show resolution message
+      resolutionMessage.innerHTML = 'Thank you! Your issue has been reported.<br>Designated person to solve the issue: Ramesh Mishra (9876345623)<br>Please rate our service based on your experience.';
     });
 
-    function displayIssues() {
-      issueList.innerHTML = '';
-      issues.forEach((issue) => {
-        const issueHTML = `
-          <li>
-            <h3>${issue.name} - ${issue.type} at ${issue.location}</h3>
-            <p>Mobile Number: ${issue.mobileNumber}</p>
-            <p>Description: ${issue.description}</p>
-            <p>Aadhar Number: ${issue.aadharNumber}</p>
-            <p>Upload File: ${issue.uploadFile.name}</p>
-            <p>Status: ${issue.status}</p>
-          </li>
-        `;
-        issueList.innerHTML += issueHTML;
-      });
-    }
+    updateScoreButton.addEventListener('click', () => {
+      const points = parseInt(reviewSelect.value);
+      creditScore += points;
+      currentCreditScore.textContent = creditScore;
+    });
   </script>
 </body>
 </html>
